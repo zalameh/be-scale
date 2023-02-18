@@ -7,6 +7,7 @@ router.get("/", (req, res) => {
   res.send("Material");
 });
 router.post("/", createMaterial);
+router.delete("/", deleteMaterials);
 
 async function createMaterial(req, res) {
   // CHECK WHETHER MATERIAL EXISTS
@@ -45,6 +46,23 @@ async function createMaterial(req, res) {
   return res.status(201).json({
     message: "Document created",
     data: result,
+  });
+}
+
+async function deleteMaterials(req, res) {
+  let result;
+
+  try {
+    result = await Material.deleteMany();
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      error: e,
+    });
+  }
+
+  res.status(200).json({
+    message: "Delete All",
   });
 }
 
