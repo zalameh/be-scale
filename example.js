@@ -2,8 +2,19 @@ function sum(a, b) {
   return a + b;
 }
 
-describe("sum function", () => {
-  test("adds 1 + 2 to equal 3", () => {
-    expect(sum(1, 2)).toBe(3);
-  });
-});
+async function checkMaterials(productId) {
+  try {
+    const materials = await Material.find({ productId: productId, startTime: null });
+    if (materials.length === 0) {
+      console.log("No materials found with specified productId and null startTime");
+      return null; // no materials found, return null
+    } else {
+      console.log(materials);
+      return materials; // materials found, return them
+    }
+  } catch (err) {
+    console.error(err);
+    throw new Error("Error while checking materials");
+  }
+}
+
