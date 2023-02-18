@@ -1,7 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+
+// REQUIRE COLLECTIONS
 const sapRouter = require("./routes/sap");
 const productRouter = require("./routes/product");
+const materialRouter = require("./routes/material");
 
 // MONGOOSE SETUP
 mongoose.set("strictQuery", false);
@@ -22,6 +25,7 @@ function initExpress() {
 
 	app.use("/sap", sapRouter);
 	app.use("/product", productRouter);
+	app.use("/material", materialRouter);
 
 	app.listen(PORT, appListen);
 }

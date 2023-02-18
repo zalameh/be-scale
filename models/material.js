@@ -34,15 +34,15 @@ const materialSchema = new mongoose.Schema(
 		},
 	},
 	{
-		versionKey: false,
+		timestamps: true,
 	}
 );
 
-productSchema.statics.isExisted = async function (no, sapId) {
-	const existingDoc = await this.findOne({ no, sapId });
+materialSchema.statics.isExisted = async function (no, productId) {
+	const existingDoc = await this.findOne({ no, productId });
 	return existingDoc;
 };
 
-const Product = mongoose.model("product", productSchema);
+const Material = mongoose.model("material", materialSchema);
 
-module.exports = Product;
+module.exports = Material;

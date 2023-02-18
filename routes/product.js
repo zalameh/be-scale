@@ -3,20 +3,11 @@ const router = express.Router();
 
 const Product = require("../models/product");
 
-router.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+router.get("/", getProducts);
 router.post("/", createProduct);
+router.delete("/", deleteProducts);
 
 async function createProduct(req, res) {
-  // // VALIDATE SAP NUMBER
-  // const isReqBodyValid = sapInputValidation(req?.body?.no);
-  // if (!isReqBodyValid) {
-  //   return res.status(400).json({
-  //     message: 'Invalid input for "no" field',
-  //   });
-  // }
-
   // CHECK WHETHER PRODUCT EXISTS
   try {
     const existingDoc = await Product.isExisted(
@@ -26,7 +17,7 @@ async function createProduct(req, res) {
     if (existingDoc) {
       return res.status(200).json({
         message: "Document existed",
-        product: existingDoc,
+        data: existingDoc,
       });
     }
   } catch (e) {
@@ -37,6 +28,7 @@ async function createProduct(req, res) {
     });
   }
 
+  // CREATE NEW DOCUMENT
   const newProduct = new Product({ ...req?.body });
 
   let result;
@@ -51,7 +43,42 @@ async function createProduct(req, res) {
 
   return res.status(201).json({
     message: "Document created",
-    product: result,
+    data: result,
+  });
+}
+
+async function getProducts(req, res) {
+  let result;
+
+  try {
+    result = await Product.find();
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      error: e,
+    });
+  }
+
+  res.status(200).json({
+    message: "Success",
+    data: result,
+  });
+}
+
+async function deleteProducts(req, res) {
+  let result;
+
+  try {
+    result = await Product.deleteMany();
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      error: e,
+    });
+  }
+
+  res.status(200).json({
+    message: "Delete All",
   });
 }
 

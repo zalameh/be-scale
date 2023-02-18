@@ -22,7 +22,7 @@ async function createSAP(req, res) {
     if (existingDoc) {
       return res.status(200).json({
         message: "Document existed",
-        sap: existingDoc,
+        data: existingDoc,
       });
     }
   } catch (e) {
@@ -33,6 +33,7 @@ async function createSAP(req, res) {
     });
   }
 
+  // CREATE NEW DOCUMENT
   const SAPDoc = new SAP({ ...req?.body });
 
   let result;
@@ -47,7 +48,7 @@ async function createSAP(req, res) {
 
   return res.status(201).json({
     message: "Document created",
-    sap: result,
+    data: result,
   });
 }
 
@@ -65,7 +66,7 @@ async function getAllSAP(req, res) {
 
   res.status(200).json({
     message: "Success",
-    sap: result,
+    data: result,
   });
 }
 
