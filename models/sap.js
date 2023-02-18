@@ -13,7 +13,7 @@ const sapSchema = new mongoose.Schema(
 	}
 );
 
-sapSchema.statics.isAlreadyEntered = async function (no) {
+sapSchema.statics.isExisted = async function (no) {
 	const existingDoc = await this.findOne({ no });
 	return existingDoc;
 };

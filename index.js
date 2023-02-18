@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const sapRouter = require("./routes/sap");
+const productRouter = require("./routes/product");
 
 // MONGOOSE SETUP
 mongoose.set("strictQuery", false);
@@ -16,17 +17,13 @@ connectDB();
 // INITIALIZE APP
 initExpress();
 
-async function initExpress() {
-	try {
-		app.get("/", helloWorld);
+function initExpress() {
+	app.get("/", helloWorld);
 
-		app.use("/sap", sapRouter);
+	app.use("/sap", sapRouter);
+	app.use("/product", productRouter);
 
-		app.listen(PORT, appListen);
-	} catch (e) {
-		console.error(e);
-		process.exit(1);
-	}
+	app.listen(PORT, appListen);
 }
 
 async function connectDB() {

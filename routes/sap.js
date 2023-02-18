@@ -4,24 +4,24 @@ const router = express.Router();
 const SAP = require("../models/sap");
 
 router.post("/", createSAP);
+router.get("/", getAllSAP);
 router.delete("/", deleteAllSAP);
 
 async function createSAP(req, res) {
+  // VALIDATE SAP NUMBER
   const isReqBodyValid = sapInputValidation(req?.body?.no);
-
   if (!isReqBodyValid) {
     return res.status(400).json({
       message: 'Invalid input for "no" field',
     });
   }
 
-  const SAPDoc = new SAP({ ...req?.body });
-
+  // CHECK WHETHER SAP EXISTS
   try {
-    const existingDoc = await SAP.isAlreadyEntered(SAPDoc.no);
+    const existingDoc = await SAP.isExisted(req?.body?.no);
     if (existingDoc) {
       return res.status(200).json({
-        message: "Document existed.",
+        message: "Document existed",
         sap: existingDoc,
       });
     }
@@ -32,6 +32,8 @@ async function createSAP(req, res) {
       error: e,
     });
   }
+
+  const SAPDoc = new SAP({ ...req?.body });
 
   let result;
   try {
@@ -44,7 +46,25 @@ async function createSAP(req, res) {
   }
 
   return res.status(201).json({
-    message: "Document created.",
+    message: "Document created",
+    sap: result,
+  });
+}
+
+async function getAllSAP(req, res) {
+  let result;
+
+  try {
+    result = await SAP.find();
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      error: e,
+    });
+  }
+
+  res.status(200).json({
+    message: "Success",
     sap: result,
   });
 }
