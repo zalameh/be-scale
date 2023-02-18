@@ -10,14 +10,13 @@ const sapSchema = new mongoose.Schema(
 	{
 		collection: "sap",
 		versionKey: false,
-		statics: {
-			isAlready(no) {
-				console.log(no);
-				return this.findOne({ no });
-			},
-		},
 	}
 );
+
+sapSchema.statics.isAlreadyEntered = async function (no) {
+	const existingDoc = await this.findOne({ no });
+	return existingDoc;
+};
 
 const SAP = mongoose.model("sap", sapSchema);
 
