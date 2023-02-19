@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const Material = require("../models/material");
+const SAP = require("../models/sap"); // SAP model
+const Product = require("../models/product"); // Product model
+const Material = require("../models/material"); // Material model
 
-router.get("/", (req, res) => {
-  res.send("Material");
-});
 router.post("/", createMaterial);
+router.get("/", getMaterials);
+router.get("/details/:no", getMaterialDetails);
 router.delete("/", deleteMaterials);
 
 async function createMaterial(req, res) {
@@ -47,6 +48,62 @@ async function createMaterial(req, res) {
     message: "Document created",
     data: result,
   });
+}
+
+async function getMaterials(req, res) {
+  const { productId } = req?.query;
+
+  let result;
+  try {
+    if (productId) {
+      if (productId.length !== 24) {
+        return res.status(404).json({
+          message: "Invalid query",
+        });
+      }
+      result = await Material.find({ productId });
+    } else {
+      result = await Material.find();
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      error: e,
+    });
+  }
+
+  if (!result) {
+    return res.status(400).json({
+      message: "Not found",
+    });
+  }
+
+  res.status(200).json({
+    message: "Success",
+    data: result,
+  });
+}
+
+async function getMaterialDetails(req, res) {
+  const { no } = req?.params;
+  const { productId, sapId } = req?.query;
+
+  try {
+    // Find a Material document that matches the provided no and productId
+    const material = await Material.findOne({ no, productId });
+
+    // Find a Product document that matches the provided productId
+    const product = await Product.findOne({ productId });
+
+    // Find a SAP document that matches the provided sapId
+    const sap = await SAP.findOne({ sapId });
+
+    // Return the Material, Product, and SAP documents as a JSON response
+    res.json({ material, product, sap });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 async function deleteMaterials(req, res) {
