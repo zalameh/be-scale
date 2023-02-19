@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const sapRouter = require("./routes/sap");
 const productRouter = require("./routes/product");
 const materialRouter = require("./routes/material");
+const timerRouter = require("./routes/timer");
 
 // MONGOOSE SETUP
 mongoose.set("strictQuery", false);
@@ -26,6 +27,7 @@ function initExpress() {
 	app.use("/sap", sapRouter);
 	app.use("/product", productRouter);
 	app.use("/material", materialRouter);
+	app.use("/timer", timerRouter);
 
 	app.listen(PORT, appListen);
 }

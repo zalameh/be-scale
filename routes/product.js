@@ -4,7 +4,7 @@ const router = express.Router();
 const Product = require("../models/product");
 
 router.get("/", getProducts);
-router.get("/:no", getProduct);
+router.get("/:id", getProduct);
 router.post("/", createProduct);
 router.delete("/", deleteProducts);
 
@@ -78,10 +78,10 @@ async function getProducts(req, res) {
 }
 
 async function getProduct(req, res) {
-  const { no } = req?.params;
-  const { sapId } = req?.query;
+  const { id } = req?.params;
+  // const { sapId } = req?.query;
 
-  if (!sapId || sapId.length !== 24 || !no) {
+  if (id.length !== 24 || !id) {
     return res.status(404).json({
       message: "Invalid query or params",
     });
@@ -89,7 +89,7 @@ async function getProduct(req, res) {
 
   let result;
   try {
-    result = await Product.findOne({ sapId, no });
+    result = await Product.findOne({ _id: id });
   } catch (e) {
     console.log(e);
     res.status(500).json({
