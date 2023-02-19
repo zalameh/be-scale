@@ -93,16 +93,16 @@ async function getMaterialDetails(req, res) {
     const material = await Material.findOne({ no, productId });
 
     // Find a Product document that matches the provided productId
-    const product = await Product.findOne({ productId });
+    const product = await Product.findOne({ _id: productId });
 
     // Find a SAP document that matches the provided sapId
-    const sap = await SAP.findOne({ sapId });
+    const sap = await SAP.findOne({ _id: sapId });
 
     // Return the Material, Product, and SAP documents as a JSON response
     res.json({ material, product, sap });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
