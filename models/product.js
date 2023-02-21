@@ -9,7 +9,6 @@ const productSchema = new mongoose.Schema(
 		},
 		sapId: {
 			type: Schema.Types.ObjectId,
-			required: true,
 		},
 		startTime: {
 			type: Number,
@@ -30,7 +29,7 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.statics.isExisted = async function (no, sapId) {
-	const existingDoc = await this.findOne({ no, sapId });
+	const existingDoc = await this.findOne({ no });
 	return existingDoc;
 };
 

@@ -9,12 +9,10 @@ router.post("/", createProduct);
 router.delete("/", deleteProducts);
 
 async function createProduct(req, res) {
-  // CHECK WHETHER PRODUCT EXISTS
+  const { no } = req?.body;
+
   try {
-    const existingDoc = await Product.isExisted(
-      req?.body?.no,
-      req?.body?.sapId
-    );
+    const existingDoc = await Product.isExisted(no);
     if (existingDoc) {
       return res.status(200).json({
         message: "Document existed",
@@ -30,7 +28,7 @@ async function createProduct(req, res) {
   }
 
   // CREATE NEW DOCUMENT
-  const newProduct = new Product({ ...req?.body });
+  const newProduct = new Product({ no });
 
   let result;
   try {
