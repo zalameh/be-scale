@@ -61,10 +61,10 @@ async function endTime(req, res) {
 
   // Find all materials for the given productId that haven't been completed
   const materials = await Material.find({ productId });
-  const isAllCompleted = materials.some(m => m.isCompleted);
+  const isAnyNotCompleted = materials.some(m => !m.isCompleted);
 
   // Check if all materials for the product have been completed
-  if (isAllCompleted) {
+  if (!isAnyNotCompleted) {
     // Find the corresponding product document
     const product = await Product.findOne({ _id: productId });
     if (!product) {

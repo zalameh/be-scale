@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 
 // REQUIRE COLLECTIONS
@@ -14,6 +15,7 @@ mongoose.set("strictQuery", false);
 const PORT = 3000;
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // INITIALIZE DB CONNECTION
 connectDB();
@@ -47,5 +49,5 @@ function appListen() {
 }
 
 function helloWorld(req, res) {
-	res.send("Hello World!");
+	res.send({ message: "Hello World" });
 }

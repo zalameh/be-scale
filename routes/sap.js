@@ -9,6 +9,7 @@ router.delete("/", deleteAllSAP);
 
 async function createSAP(req, res) {
   // VALIDATE SAP NUMBER
+  console.log(typeof req?.body?.no);
   const isReqBodyValid = sapInputValidation(req?.body?.no);
   if (!isReqBodyValid) {
     return res.status(400).json({
