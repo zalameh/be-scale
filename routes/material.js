@@ -11,28 +11,27 @@ router.get("/details/:no", getMaterialDetails);
 router.delete("/", deleteMaterials);
 
 async function createMaterial(req, res) {
+  const { no, productId } = req?.body;
+
   // CHECK WHETHER MATERIAL EXISTS
-  try {
-    const existingDoc = await Material.isExisted(
-      req?.body?.no,
-      req?.body?.productId
-    );
-    if (existingDoc) {
-      return res.status(200).json({
-        message: "Document existed",
-        data: existingDoc,
-      });
-    }
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      message: "An error occurred",
-      error: e,
-    });
-  }
+  // try {
+  //   const existingDoc = await Material.isExisted(no, productId);
+  //   if (existingDoc) {
+  //     return res.status(200).json({
+  //       message: "Document existed",
+  //       data: existingDoc,
+  //     });
+  //   }
+  // } catch (e) {
+  //   console.log(e);
+  //   return res.status(500).json({
+  //     message: "An error occurred",
+  //     error: e,
+  //   });
+  // }
 
   // CREATE NEW DOCUMENT
-  const newMaterial = new Material({ ...req?.body });
+  const newMaterial = new Material({ no, productId });
 
   let result;
   try {

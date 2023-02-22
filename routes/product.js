@@ -47,29 +47,35 @@ async function createProduct(req, res) {
 }
 
 async function getProducts(req, res) {
-  const { sapId } = req?.query;
+  const { sapId, status } = req.query;
+
+  const isCompleted = status === "true";
+  console.log(isCompleted);
 
   let result;
   try {
-    if (sapId) {
+    if (sapId && status) {
+      result = await Product.find({ sapId, isCompleted });
+    } else if (sapId) {
       result = await Product.find({ sapId });
+    } else if (status) {
+      result = await Product.find({ isCompleted });
     } else {
       result = await Product.find();
     }
+    if (result.length === 0) {
+      return res.status(404).json({
+        message: "Not found",
+      });
+    }
   } catch (e) {
     console.log(e);
-    res.status(500).json({
+    return res.status(500).json({
       error: e,
     });
   }
 
-  if (result.length === 0) {
-    return res.status(404).json({
-      message: "Not found",
-    });
-  }
-
-  res.status(200).json({
+  return res.status(200).json({
     message: "Success",
     data: result,
   });
