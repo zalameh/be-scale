@@ -8,9 +8,10 @@ router.get("/", getAllSAP);
 router.delete("/", deleteAllSAP);
 
 async function createSAP(req, res) {
+  const { no } = req?.body;
+
   // VALIDATE SAP NUMBER
-  console.log(typeof req?.body?.no);
-  const isReqBodyValid = sapInputValidation(req?.body?.no);
+  const isReqBodyValid = sapInputValidation(no);
   if (!isReqBodyValid) {
     return res.status(400).json({
       message: 'Invalid input for "no" field',
@@ -19,7 +20,7 @@ async function createSAP(req, res) {
 
   // CHECK WHETHER SAP EXISTS
   try {
-    const existingDoc = await SAP.isExisted(req?.body?.no);
+    const existingDoc = await SAP.isExisted(no);
     if (existingDoc) {
       return res.status(200).json({
         message: "Document existed",
@@ -35,7 +36,7 @@ async function createSAP(req, res) {
   }
 
   // CREATE NEW DOCUMENT
-  const SAPDoc = new SAP({ ...req?.body });
+  const SAPDoc = new SAP({ no });
 
   let result;
   try {

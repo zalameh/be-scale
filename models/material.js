@@ -19,6 +19,10 @@ const materialSchema = new mongoose.Schema(
 			type: Number,
 			default: null,
 		},
+		duration: {
+			type: Number,
+			default: null,
+		},
 		isCompleted: {
 			type: Boolean,
 			default: false,
