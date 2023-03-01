@@ -10,6 +10,8 @@ const materialRouter = require("./routes/material");
 const timerRouter = require("./routes/timer");
 const csvRouter = require("./routes/csv");
 
+const udp = require("./udp");
+
 // MONGOOSE SETUP
 mongoose.set("strictQuery", false);
 
@@ -44,7 +46,6 @@ async function connectDB() {
 	try {
 		const db = await mongoose.connect("mongodb://127.0.0.1:27017/scale");
 	} catch (e) {
-		consle.error(e);
 		console.error(e);
 		process.exit(1);
 	}

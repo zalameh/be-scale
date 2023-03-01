@@ -6,6 +6,7 @@ const Product = require("../models/product");
 router.get("/", getProducts);
 router.get("/:id", getProduct);
 router.post("/", createProduct);
+router.put("/", updateProduct);
 router.delete("/", deleteProducts);
 
 async function createProduct(req, res) {
@@ -46,11 +47,38 @@ async function createProduct(req, res) {
   });
 }
 
+async function updateProduct(req, res) {
+  const { _id, sapId } = req.body;
+
+  // Check if the product already has sapId
+  const product = await Product.findById(_id);
+  if (product.sapId === sapId) {
+    return res.status(304).json({
+      message: "Product already has the provided sapId",
+      data: product,
+    });
+  }
+
+  let result;
+  try {
+    result = await Product.findByIdAndUpdate(_id, { sapId }, { new: true });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      error: e,
+    });
+  }
+
+  return res.status(200).json({
+    message: "Document updated",
+    data: result,
+  });
+}
+
 async function getProducts(req, res) {
   const { sapId, status } = req.query;
 
   const isCompleted = status === "true";
-  console.log(isCompleted);
 
   let result;
   try {

@@ -6,6 +6,7 @@ const Product = require("../models/product"); // Product model
 const Material = require("../models/material"); // Material model
 
 router.post("/", createMaterial);
+router.put("/", updateMaterial);
 router.get("/", getMaterials);
 router.get("/details/:no", getMaterialDetails);
 router.delete("/", deleteMaterials);
@@ -50,17 +51,28 @@ async function createMaterial(req, res) {
 }
 
 async function getMaterials(req, res) {
-  const { productId } = req?.query;
+  const { productId, status } = req.query;
+
+  const isCompleted = status === "true";
 
   let result;
   try {
-    if (productId) {
+    if (productId && status) {
       if (productId.length !== 24) {
         return res.status(404).json({
           message: "Invalid query",
         });
       }
-      result = await Material.find({ productId });
+      result = await Material.find({ productId, isCompleted });
+    } else if (productId) {
+      if (productId.length !== 24) {
+        return res.status(404).json({
+          message: "Invalid query",
+        });
+      }
+      result = await Product.find({ sapId });
+    } else if (status) {
+      result = await Product.find({ isCompleted });
     } else {
       result = await Material.find();
     }
@@ -79,6 +91,29 @@ async function getMaterials(req, res) {
 
   res.status(200).json({
     message: "Success",
+    data: result,
+  });
+}
+
+async function updateMaterial(req, res) {
+  const { _id, quantity, actualQuantity } = req.body;
+
+  let result;
+  try {
+    result = await Material.findByIdAndUpdate(
+      _id,
+      { quantity, actualQuantity },
+      { new: true }
+    );
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      error: e,
+    });
+  }
+
+  return res.status(200).json({
+    message: "Document updated",
     data: result,
   });
 }

@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema(
 		},
 		sapId: {
 			type: Schema.Types.ObjectId,
+			default: null,
 		},
 		startTime: {
 			type: Number,
